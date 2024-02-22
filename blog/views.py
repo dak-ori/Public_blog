@@ -1,11 +1,13 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView,DetailView
 from .models import Post
 
 class PostList(ListView):
     model = Post
     ordering = '-pk'
 
+class PostDetail(DetailView):
+    model = Post
 
 # <FBV 방법을 이용한 포스트 목록 페이지 생성>
 # def index(request):
@@ -19,13 +21,14 @@ class PostList(ListView):
 #         }
 #     )
     
-def single_post_page(request, pk):
-    post = Post.objects.get(pk=pk)
+# <FBV 방법을 이용한 포스트 상세 페이지 생성>    
+# def single_post_page(request, pk):
+#     post = Post.objects.get(pk=pk)
     
-    return render(
-        request,
-        'blog/single_post_page.html',
-        {
-            'post' :post,
-        }
-    )
+#     return render(
+#         request,
+#         'blog/single_post_page.html',
+#         {
+#             'post' :post,
+#         }
+#     )
