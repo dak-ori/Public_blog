@@ -3,7 +3,6 @@
 <html>
     <head>
         <title>Blog</title>
-        <link href="./practice.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.min.css' %}" media="screen">
         <script src="https://kit.fontawesome.com/446f8bf714.js" crossorigin="anonymous"></script>   
     </head>
@@ -87,7 +86,10 @@
                         {% endif %}
                         <div class="card-body">
                             <h2 class="card-title h4">{{ p.title }}</h2>
-                            <p class="card-text">{{ p.content }}</p>
+                            {% if p.hook_text %}
+                                <h5 class="text-muted">{{ p.hook_text }}</h5>
+                            {% endif %}
+                            <p class="card-text">{{ p.content | truncatechars:45 }}</p>
                             <a href="{{ p.get_absolute_url }}" class="btn btn-primary" >Read more &rarr;</a>
                         </div>
                         <div class="card-footer text-muted">
