@@ -1,10 +1,14 @@
 from django.test import TestCase,Client
 from bs4 import BeautifulSoup
+from django.contrib.auth.models import User
 from .models import Post
+
 
 class TestView(TestCase):
     def setUp(self):
         self.client = Client()
+        self.user_dakori = User.objects.create_user(username = "dakori", password = 'somepassword')
+        self.user_dakoriri = User.objects.create_user(username = 'dakoriri', password = 'somepassword')
         
     def navbar_test(self, soup):
         navbar = soup.nav
@@ -18,10 +22,10 @@ class TestView(TestCase):
         self.assertEqual(home_btn.attrs['href'], '/')
         
         blog_btn = navbar.find('a', text="Blog")
-        self.assertEqual(blog_btn.attrs['href'], '/')
+        self.assertEqual(blog_btn.attrs['href'], '/blog/')
         
         about_me_btn = navbar.find('a', text='About Me')
-        self.assertEqual(about_me_btn.attrs['href'], '/')
+        self.assertEqual(about_me_btn.attrs['href'], '/about_me')
         
     def test_post_list(self):
         
@@ -51,10 +55,12 @@ class TestView(TestCase):
         post_001 = Post.objects.create(
             title= '첫 번째 포스트입니다.',
             content = '1등이 전부는 아니잖아요?',
+            author = self.user_dakori
         )
         post_002 = Post.objects.create(
             title = '두 번째 포스트입니다.',
             content = '1등이 전부는 아니잖아요?',
+            author = self.user_dakoriri
         )
         self.assertEqual(Post.objects.count(), 2)
         
@@ -70,6 +76,8 @@ class TestView(TestCase):
         
         # 3.4 '아직 게시물이 없습니다' 라는 문구는 더 이상 보이지 않는다
         self.assertNotIn('아직 게시물이 없습니다', main_area.text)
+        self.assertIn(self.user_dakori.username.upper(), main_area.text)
+        self.assertIn(self.user_dakoriri.username.upper(), main_area.text)
         
     
     
@@ -77,7 +85,8 @@ class TestView(TestCase):
         # 1.1 포스트가 하나 있다.
         post_001 = Post.objects.create(
             title = "첫 번째 포스트입니다",
-            content = 'Hello World. We are the world',  
+            content = 'Hello World. We are the world',
+            author = self.user_dakori,
         )
         
         # 1.2 그 포스트의 url은 '/blog/1/' 이다
@@ -99,7 +108,8 @@ class TestView(TestCase):
         main_area = soup.find('div' , id='main-area')
         post_area = main_area.find('div' , id='post-area')
         self.assertIn(post_001.title, post_area.text)
-        # 2.5 첫 번째 포스트의 작성자가 포스트 영역에 있다(아직구현안함)
+        # 2.5 첫 번째 포스트의 작성자가 포스트 영역에 있다
+        self.assertIn(self.user_dakori.username.upper(), post_area.text)
         
         # 2.6 첫 번째 포스트의 내용이 포스트 영역에 있다
         self.assertIn(post_001.content, post_area.text)
