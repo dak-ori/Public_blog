@@ -9,6 +9,8 @@ class TestView(TestCase):
         self.client = Client()
         self.user_dakori = User.objects.create_user(username = 'dakori', password = 'somepassword')
         self.user_dakoriri = User.objects.create_user(username = 'dakoriri', password = 'somepassword')
+        self.user_dakori.is_staff = True
+        self.user_dakori.save()
         
         self.category_programming = Category.objects.create(name = 'programming', slug='programming')
         self.category_music = Category.objects.create(name = 'music', slug = 'music')
@@ -197,9 +199,13 @@ class TestView(TestCase):
         response = self.client.get('/blog/create_post/')
         self.assertNotEqual(response.status_code, 200)
         
-        # 로그인을 한다.
-        self.client.login(username='dakori', password='somepassword')
+        # 관리자가 아닌 닭오리리는 글을 생성 할 수 없다
+        self.client.login(username = 'dakoriri', password='somepassword')
+        response = self.client.get('/blog/create_post/')
+        self.assertNotEqual(response.status_code, 200)
         
+        # 관리자인 닭오리가 로그인을 한다.
+        self.client.login(username='dakori', password='somepassword')
         response = self.client.get('/blog/create_post/')
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
