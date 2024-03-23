@@ -1,7 +1,7 @@
 from django.test import TestCase,Client
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Comment
 
 
 class TestView(TestCase):
@@ -18,8 +18,7 @@ class TestView(TestCase):
         self.tag_python_kor = Tag.objects.create(name="파이썬 공부", slug="파이썬 공부")
         self.tag_python = Tag.objects.create(name="python", slug="python")
         self.tag_hello = Tag.objects.create(name="hello", slug="hello")
-        
-        
+
         self.post_001 = Post.objects.create(
             title = '첫번째',
             content = 'Hello, World',
@@ -37,9 +36,15 @@ class TestView(TestCase):
             title = '세번째',
             content = '카테고리 없음',  
             author = self.user_dakori)
+       
         self.post_003.tags.add(self.tag_python_kor)
         self.post_003.tags.add(self.tag_python)
-
+        
+        self.comment_001 = Comment.objects.create(
+            post = self.post_001,
+            author = self.user_dakori,
+            content ='첫번째 댓글'
+        )
         
     def test_category_page(self):
         response = self.client.get(self.category_programming.get_absolute_url())
@@ -139,6 +144,7 @@ class TestView(TestCase):
     
     
     def test_post_detail(self):
+        
         # 1.1 포스트가 하나 있다.
         post_001 = Post.objects.create(
             title = "첫 번째 포스트입니다",
@@ -177,7 +183,19 @@ class TestView(TestCase):
         self.assertIn(self.tag_hello.name, post_area.text)
         self.assertNotIn(self.tag_python.name, post_area.text)
         self.assertNotIn(self.tag_python_kor.name, post_area.text)
-    
+        
+        # Comment_area
+        comments_area = soup.find('div', id='comment-area')
+        if comments_area:
+            comment_001_area = comments_area.find('div', id='comment-1')
+            if comment_001_area:
+                self.assertIn(self.comment_001.author.username, comment_001_area.text)
+                self.assertIn(self.comment_001.content, comment_001_area.text)
+            else:
+                self.fail('Comment area exists but comment_001 is not found.')
+        else:
+            self.fail('Comment area is not found.')
+            
     def test_tag_page(self):
         response = self.client.get(self.tag_hello.get_absolute_url())
         self.assertEqual(response.status_code, 200)
@@ -255,7 +273,7 @@ class TestView(TestCase):
         # 작성자가 접근하는 경우
         self.client.login(
             username=self.post_003.author.username,
-            password='somepassword'
+            password='somepassword',
         )
         response = self.client.get(update_post_url)
         self.assertEqual(response.status_code, 200)
