@@ -148,23 +148,25 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# SOCIALACCOUNT_PROVIDERS = {
-#     "google": {
-#         "APP": {
-#             "client_id": os.getenv("275902936717-q9m2h7grib9tsrmvguu0qvs19mqo0hlf.apps.googleusercontent.com"),
-#             "secret": os.getenv("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"),
-#             "key": ""
-#         },
+# 테스트 할때만 주석해제
 
-#         "SCOPE": [
-#             "profile",
-#             "email",
-#         ],
-#         "AUTH_PARAMS": {
-#             "access_type": "online",
-#         }
-#     }
-# }
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": os.getenv("275902936717-q9m2h7grib9tsrmvguu0qvs19mqo0hlf.apps.googleusercontent.com"),
+            "secret": os.getenv("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"),
+            "key": ""
+        },
+
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        }
+    }
+}
 
 SITE_ID = 1
 
