@@ -467,3 +467,5 @@ class TestView(TestCase):
         self.assertNotIn(self.post_002.title, main_area.text)
         self.assertIn(self.post_003.title, main_area.text)
         self.assertIn(post_about_python.title, main_area.text)
+        
+        
