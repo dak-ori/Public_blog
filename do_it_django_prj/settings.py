@@ -22,12 +22,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b)6yy*x)o^13xi1dc)o0qfhfjxc9zd$z#03gl_y^y80&scd-^w'
+SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-b)6yy*x)o^13xi1dc)o0qfhfjxc9zd$z#03gl_y^y80&scd-^w')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ.get('DEBUG', 1))
 
-ALLOWED_HOSTS = []
+if os.environ.get('DJANGO_ALLOWED_HOSTS'):
+    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
+else:
+    ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -148,25 +152,26 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+
 # 테스트 할때만 주석해제
 
-# SOCIALACCOUNT_PROVIDERS = {
-#     "google": {
-#         "APP": {
-#             "client_id": os.getenv("275902936717-q9m2h7grib9tsrmvguu0qvs19mqo0hlf.apps.googleusercontent.com"),
-#             "secret": os.getenv("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"),
-#             "key": ""
-#         },
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": os.getenv("275902936717-q9m2h7grib9tsrmvguu0qvs19mqo0hlf.apps.googleusercontent.com"),
+            "secret": os.getenv("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"),
+            "key": ""
+        },
 
-#         "SCOPE": [
-#             "profile",
-#             "email",
-#         ],
-#         "AUTH_PARAMS": {
-#             "access_type": "online",
-#         }
-#     }
-# }
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        }
+    }
+}
 
 
 
