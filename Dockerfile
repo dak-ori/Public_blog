@@ -10,8 +10,4 @@ RUN apk update && \
     pip install -r requirements.txt
 
 COPY . /usr/src/app/
-
-# manage.py 파일이 있는 디렉터리로 이동
-WORKDIR /usr/src/app/  # 이동할 디렉터리를 재지정합니다.
-
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
