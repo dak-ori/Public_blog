@@ -22,16 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-b)6yy*x)o^13xi1dc)o0qfhfjxc9zd$z#03gl_y^y80&scd-^w')
-
+SECRET_KEY = 'django-insecure-b)6yy*x)o^13xi1dc)o0qfhfjxc9zd$z#03gl_y^y80&scd-^w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get('DEBUG', 1))
+DEBUG = True
 
-if os.environ.get('DJANGO_ALLOWED_HOSTS'):
-    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
-else:
-    ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -95,12 +91,8 @@ WSGI_APPLICATION = 'do_it_django_prj.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get("SQL_ENGINE",'django.db.backends.sqlite3'),
-        'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
-        'USER': os.environ.get('SQL_USER', 'user'),
-        'PASSWORD': os.environ.get('SQL_PASSWORD', 'password'),
-        'HOST': os.environ.get('SQL_HOST', 'localhost'),
-        'PORT': os.environ.get('SQL_PORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -139,12 +131,10 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, '_static')
+STATIC_URL = 'static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '_media')
-
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Default primary key field type
@@ -158,30 +148,30 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# 테스트 할때만 주석해제
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     "google": {
+#         "APP": {
+#             "client_id": os.getenv("275902936717-q9m2h7grib9tsrmvguu0qvs19mqo0hlf.apps.googleusercontent.com"),
+#             "secret": os.getenv("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"),
+#             "key": ""
+#         },
+
+#         "SCOPE": [
+#             "profile",
+#             "email",
+#         ],
+#         "AUTH_PARAMS": {
+#             "access_type": "online",
+#         }
+#     }
+# }
+
+
+
 SITE_ID = 1
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL = '/blog/'
-
-
-SOCIALACCOUNT_PROVIDERS = {
-    "google": {
-        "APP": {
-            "client_id": os.getenv("275902936717-q9m2h7grib9tsrmvguu0qvs19mqo0hlf.apps.googleusercontent.com"),
-            "secret": os.getenv("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"),
-            "key": ""
-        },
-
-        "SCOPE": [
-            "profile",
-            "email",
-        ],
-        "AUTH_PARAMS": {
-            "access_type": "online",
-        }
-    }
-}
-
-
-
 
