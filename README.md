@@ -1,2 +1,6 @@
 # do_it_django_a_to_z
-django + bootstrap 완독가보자~
+# ---
+
+우분투 오류가 너무 많이 생기는 관계로
+
+따로 서버를 구현하기 위해 노력 중.
